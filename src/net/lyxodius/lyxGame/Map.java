@@ -81,7 +81,9 @@ public class Map {
                         String imageName = bufferedReader.readLine();
                         Entity entity = new Entity(name, position, imageName);
                         entity.behavior = Behavior.valueOf(bufferedReader.readLine());
-                        entity.onInteract = Script.loadFromFile(bufferedReader.readLine());
+                        for (Event event : Event.values()) {
+                            entity.events.put(event, Script.loadFromFile(bufferedReader.readLine()));
+                        }
 
                         map.entityList.add(entity);
 
@@ -177,7 +179,9 @@ public class Map {
                             entity.position.x, entity.position.y, entity.position.z));
                     printWriter.println(entity.imageName);
                     printWriter.println(entity.behavior);
-                    printWriter.println(entity.onInteract);
+                    for (Event event : Event.values()) {
+                        printWriter.println(entity.events.get(event));
+                    }
                 }
             }
         } catch (IOException e) {

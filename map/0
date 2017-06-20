@@ -58,9 +58,11 @@ TestEntity
 npc1
 RANDOM_MOVEMENT
 TestScript
+null
 
 TestEntity2
-17 9 1
+17 9 0
 npc2
 NOTHING
 TestScript
+null

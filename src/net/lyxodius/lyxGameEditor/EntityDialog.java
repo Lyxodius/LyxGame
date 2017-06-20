@@ -2,6 +2,7 @@ package net.lyxodius.lyxGameEditor;
 
 import net.lyxodius.lyxGame.Behavior;
 import net.lyxodius.lyxGame.Entity;
+import net.lyxodius.lyxGame.Event;
 import net.lyxodius.lyxGame.Script;
 
 import javax.imageio.ImageIO;
@@ -52,29 +53,38 @@ class EntityDialog extends JDialog {
         behaviorComboBox.setSelectedItem(entity.behavior);
         behaviorComboBox.addActionListener(e -> entity.behavior = (Behavior) behaviorComboBox.getSelectedItem());
 
-        LyxPanel onInteractPanel = new LyxPanel(codePanel);
-
-        JButton editOnInteractButton = new JButton("Edit");
-
-        onInteractPanel.add(new JLabel("onInteract:"));
-        String onInteract = null;
-        if (entity.onInteract != null) {
-            onInteract = entity.onInteract.name;
-        } else {
-            editOnInteractButton.setEnabled(false);
+        for (Event event : Event.values()) {
+            this.createEventPanel(codePanel, event.name());
         }
-        JTextField onInteractTextField = new JTextField(onInteract, 8);
-        onInteractPanel.add(onInteractTextField);
-        onInteractTextField.getDocument().addDocumentListener(new DocumentListener() {
+
+        codePanel.add(Box.createVerticalGlue(), true);
+    }
+
+    private void createEventPanel(LyxPanel parent, String name) {
+        LyxPanel eventPanel = new LyxPanel(parent);
+
+        JButton editEventButton = new JButton("Edit");
+
+        eventPanel.add(new JLabel(name + ":"));
+        String event = null;
+        Script script = entity.events.get(Event.ON_INTERACT);
+        if (script != null) {
+            event = script.name;
+        } else {
+            editEventButton.setEnabled(false);
+        }
+        JTextField eventTextField = new JTextField(event, 8);
+        eventPanel.add(eventTextField);
+        eventTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                editOnInteractButton.setEnabled(true);
+                editEventButton.setEnabled(true);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (onInteractTextField.getText().isEmpty()) {
-                    editOnInteractButton.setEnabled(false);
+                if (eventTextField.getText().isEmpty()) {
+                    editEventButton.setEnabled(false);
                 }
             }
 
@@ -84,52 +94,50 @@ class EntityDialog extends JDialog {
             }
         });
 
-        JButton setOnInteractButton = new JButton("Set");
-        onInteractPanel.add(setOnInteractButton);
-        setOnInteractButton.addActionListener(e -> {
-            String name = onInteractTextField.getText();
-            if (!name.isEmpty()) {
-                File file = new File("script/" + name + ".script");
+        JButton setEventButton = new JButton("Set");
+        eventPanel.add(setEventButton);
+        setEventButton.addActionListener(e -> {
+            String scriptName = eventTextField.getText();
+            if (!scriptName.isEmpty()) {
+                File file = new File("script/" + scriptName + ".script");
                 if (LyxGameEditor.fileCheck(file, this)) {
-                    entity.onInteract = Script.loadFromFile(name);
+                    entity.events.put(Event.ON_INTERACT, Script.loadFromFile(scriptName));
                     JOptionPane.showMessageDialog(this,
-                            String.format("Assigned script '%s' to onInteract.", name));
+                            String.format("Assigned script '%s' to %s.", scriptName, name));
                 }
             } else {
-                entity.onInteract = null;
-                JOptionPane.showMessageDialog(this, "Cleared onInteract.");
+                entity.events.put(Event.ON_INTERACT, null);
+                JOptionPane.showMessageDialog(this, String.format("Cleared %s.", name));
             }
         });
 
-        JButton onInteractBrowseButton = new JButton("Browse");
-        onInteractPanel.add(onInteractBrowseButton);
-        onInteractBrowseButton.addActionListener(e -> {
-            JFileChooser onInteractFileChooser = new JFileChooser("script");
-            int result = onInteractFileChooser.showDialog(this, "Assign script");
+        JButton eventBrowseButton = new JButton("Browse");
+        eventPanel.add(eventBrowseButton);
+        eventBrowseButton.addActionListener(e -> {
+            JFileChooser eventFileChooser = new JFileChooser("script");
+            int result = eventFileChooser.showDialog(this, "Assign script");
 
             if (result == 0) {
-                String name = onInteractFileChooser.getSelectedFile().getName();
-                name = name.substring(0, name.lastIndexOf('.'));
-                onInteractTextField.setText(name);
-                entity.onInteract = Script.loadFromFile(name);
+                String scriptName = eventFileChooser.getSelectedFile().getName();
+                scriptName = scriptName.substring(0, scriptName.lastIndexOf('.'));
+                eventTextField.setText(scriptName);
+                entity.events.put(Event.ON_INTERACT, Script.loadFromFile(scriptName));
                 JOptionPane.showMessageDialog(this,
-                        String.format("Assigned script '%s' to onInteract.", name));
+                        String.format("Assigned script '%s' to %s.", scriptName, name));
             }
         });
 
-        JButton clearOnInteractButton = new JButton("Clear");
-        onInteractPanel.add(clearOnInteractButton);
-        clearOnInteractButton.addActionListener(e -> {
-            onInteractTextField.setText(null);
-            entity.onInteract = null;
-            JOptionPane.showMessageDialog(this, "Cleared onInteract.");
+        JButton clearEventButton = new JButton("Clear");
+        eventPanel.add(clearEventButton);
+        clearEventButton.addActionListener(e -> {
+            eventTextField.setText(null);
+            entity.events.put(Event.ON_INTERACT, null);
+            JOptionPane.showMessageDialog(this, String.format("Cleared %s.", name));
         });
 
-        onInteractPanel.add(editOnInteractButton);
-        editOnInteractButton.addActionListener(
-                e -> LyxGameEditor.openFile("script/" + onInteractTextField.getText() + ".script", this));
-
-        codePanel.add(Box.createVerticalGlue(), true);
+        eventPanel.add(editEventButton);
+        editEventButton.addActionListener(
+                e -> LyxGameEditor.openFile("script/" + eventTextField.getText() + ".script", this));
     }
 
     private void createImagePanel(LyxPanel parent) {

@@ -2,12 +2,14 @@ package net.lyxodius.lyxGame;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class Entity {
     static final int WIDTH = LyxGame.TILE_SIZE + LyxGame.TILE_SIZE / 2;
     static final int HEIGHT = LyxGame.TILE_SIZE * 2;
     static final int RENDERED_WIDTH = WIDTH * LyxGame.MAGNIFICATION;
+    public final HashMap<Event, Script> events;
     private final ArrayList<Integer> moveQueue;
     private final Random random;
     public Vector3D position;
@@ -15,7 +17,6 @@ public class Entity {
     public BufferedImage image;
     public String imageName;
     public Behavior behavior;
-    public Script onInteract;
     int targetX;
     int targetY;
     int speed;
@@ -44,6 +45,10 @@ public class Entity {
         random = new Random();
 
         behavior = Behavior.NOTHING;
+        events = new HashMap<>();
+        for (Event event : Event.values()) {
+            events.put(event, null);
+        }
     }
 
     void interact(Map map, ScriptExecutor scriptExecutor) {
@@ -60,9 +65,9 @@ public class Entity {
         }
 
         if (target != null && !target.moving) {
-            target.direction = Direction.getOpposite(direction);
-            if (target.onInteract != null) {
-                scriptExecutor.executeScript(target.onInteract.getScript());
+            if (target.events.get(Event.ON_INTERACT) != null) {
+                target.direction = Direction.getOpposite(direction);
+                scriptExecutor.executeScript(target.events.get(Event.ON_INTERACT).getScript());
             }
         }
     }
