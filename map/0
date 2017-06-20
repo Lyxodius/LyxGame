@@ -19,8 +19,8 @@
 121.0.0.0.0.0.117.0.0.0.0.0.0.0.0.0.0.0.0.121
 121.0.0.0.0.0.0.0.0.119.0.0.0.0.0.81.0.119.0.121
 121.0.0.118.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.121
-121.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.121
-121.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.121
+121.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0
+121.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0
 121.0.0.0.0.0.0.157.0.0.0.0.0.0.0.0.117.0.0.121
 121.0.0.0.119.0.0.0.0.0.118.0.0.159.160.0.0.0.0.121
 121.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.121
@@ -45,8 +45,8 @@ x.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.x
 x.o.o.o.o.o.x.o.o.o.o.o.o.o.o.o.o.o.o.x
 x.o.o.o.o.o.o.o.o.x.o.o.o.o.o.o.o.x.o.x
 x.o.o.x.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.x
-x.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.x
-x.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.x
+x.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o
+x.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o
 x.o.o.o.o.o.o.x.o.o.o.o.o.o.o.o.x.o.o.x
 x.o.o.o.x.o.o.o.o.o.x.o.o.x.x.o.o.o.o.x
 x.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.o.x
@@ -58,13 +58,29 @@ TestEntity
 DOWN
 npc1
 RANDOM_MOVEMENT
-TestScript
+null
 null
 
 TestEntity2
-17 9 0
+17 9 1
 DOWN
 npc2
 NOTHING
-TestScript
 null
+null
+
+T:1
+19 5 0
+DOWN
+null
+NOTHING
+null
+0T1
+
+T:1
+19 6 0
+DOWN
+null
+NOTHING
+null
+0T1

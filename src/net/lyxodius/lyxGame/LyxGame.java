@@ -16,12 +16,12 @@ public class LyxGame extends JFrame implements Runnable {
 
     static final int FRAME_MS = 16;
     private static final boolean RENDER_FPS = false;
+    static ScriptExecutor scriptExecutor;
     private static int frame;
     private final Player player;
     private final ArrayList<BufferedImage> tileSets;
     private final Camera camera;
     private final boolean running;
-    private final ScriptExecutor scriptExecutor;
     private final InputProcessor inputProcessor;
     Map map;
     private int averageFps;

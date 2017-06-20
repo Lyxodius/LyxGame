@@ -143,6 +143,8 @@ public class Entity {
             if (entity.position.x == targetX && entity.position.y == targetY && entity.position.z == position.z) {
                 result = false;
                 step = 0;
+
+                entity.executeScript(Event.ON_TOUCH);
             }
         }
 
@@ -155,6 +157,13 @@ public class Entity {
         }
 
         return result;
+    }
+
+    private void executeScript(Event event) {
+        Script onTouch = this.events.get(event);
+        if (onTouch != null) {
+            LyxGame.scriptExecutor.executeScript(onTouch.getScript());
+        }
     }
 
     private void randomMove(Map map) {
@@ -181,6 +190,11 @@ public class Entity {
                     this.attemptMove(moveQueue.get(moveQueue.size() - 1), map);
                 } else if (pixelsRemaining < LyxGame.TILE_SIZE / 2 && step % 2 > 0) {
                     step++;
+                }
+
+                Entity entity = map.getEntityAt(position.x, position.y);
+                if (entity != null && entity != this) {
+                    entity.executeScript(Event.ON_TOUCH);
                 }
             }
 
