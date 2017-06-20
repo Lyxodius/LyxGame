@@ -153,7 +153,7 @@ public class LyxGame extends JFrame implements Runnable {
                 stepOffset = 2 * Entity.WIDTH;
             }
 
-            int directionOffset = entity.getDirection() * LyxGame.TILE_SIZE * 2;
+            int directionOffset = entity.direction.value * LyxGame.TILE_SIZE * 2;
 
             int dx1 = entity.getPosition().x * LyxGame.RENDERED_TILE_SIZE - Entity.RENDERED_WIDTH / 6 + entity.getXOffset() - camera.getPosition().x;
             int dy1 = (entity.getPosition().y - 1) * LyxGame.RENDERED_TILE_SIZE + entity.getYOffset() - camera.getPosition().y;

@@ -78,8 +78,10 @@ public class Map {
                         int y = Integer.parseInt(coordinates[1]);
                         int z = Integer.parseInt(coordinates[2]);
                         Vector3D position = new Vector3D(x, y, z);
+                        Direction direction = Direction.valueOf(bufferedReader.readLine());
                         String imageName = bufferedReader.readLine();
                         Entity entity = new Entity(name, position, imageName);
+                        entity.direction = direction;
                         entity.behavior = Behavior.valueOf(bufferedReader.readLine());
                         for (Event event : Event.values()) {
                             entity.events.put(event, Script.loadFromFile(bufferedReader.readLine()));
@@ -177,6 +179,7 @@ public class Map {
                     printWriter.println(entity.name);
                     printWriter.println(String.format("%d %d %d",
                             entity.position.x, entity.position.y, entity.position.z));
+                    printWriter.println(entity.direction);
                     printWriter.println(entity.imageName);
                     printWriter.println(entity.behavior);
                     for (Event event : Event.values()) {

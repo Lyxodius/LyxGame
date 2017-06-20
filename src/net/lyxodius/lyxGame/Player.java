@@ -10,7 +10,7 @@ class Player extends Entity {
         speed = Speed.FAST;
     }
 
-    protected boolean attemptMove(int direction, Map map) {
+    protected boolean attemptMove(Direction direction, Map map) {
         // If you try to make this more efficient it gets unreadable!
         boolean attemptMove = super.attemptMove(direction, map);
         if (attemptMove) {

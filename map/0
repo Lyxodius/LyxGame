@@ -55,6 +55,7 @@ x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x.x
 
 TestEntity
 9 5 1
+DOWN
 npc1
 RANDOM_MOVEMENT
 TestScript
@@ -62,6 +63,7 @@ null
 
 TestEntity2
 17 9 0
+DOWN
 npc2
 NOTHING
 TestScript

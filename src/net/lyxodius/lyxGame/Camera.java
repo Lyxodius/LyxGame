@@ -3,7 +3,7 @@ package net.lyxodius.lyxGame;
 class Camera {
     private final Vector2D position;
     private final LyxGame lyxGame;
-    private int direction;
+    private Direction direction;
     private boolean panning;
     private int pixelsMoved;
 
@@ -12,7 +12,7 @@ class Camera {
         position = new Vector2D(0, 0);
     }
 
-    void attemptPan(int direction) {
+    void attemptPan(Direction direction) {
         if (pixelsMoved == 0 || pixelsMoved == LyxGame.RENDERED_TILE_SIZE) {
             if ((direction == Direction.UP && position.y >= LyxGame.RENDERED_TILE_SIZE)
                     || (direction == Direction.RIGHT && position.x <= getCameraBorderX())
@@ -23,7 +23,7 @@ class Camera {
         }
     }
 
-    private void pan(int direction) {
+    private void pan(Direction direction) {
         this.direction = direction;
         pixelsMoved = 0;
         panning = true;

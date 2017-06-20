@@ -1,9 +1,6 @@
 package net.lyxodius.lyxGameEditor;
 
-import net.lyxodius.lyxGame.Behavior;
-import net.lyxodius.lyxGame.Entity;
-import net.lyxodius.lyxGame.Event;
-import net.lyxodius.lyxGame.Script;
+import net.lyxodius.lyxGame.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -54,26 +51,26 @@ class EntityDialog extends JDialog {
         behaviorComboBox.addActionListener(e -> entity.behavior = (Behavior) behaviorComboBox.getSelectedItem());
 
         for (Event event : Event.values()) {
-            this.createEventPanel(codePanel, event.name());
+            this.createEventPanel(codePanel, event);
         }
 
         codePanel.add(Box.createVerticalGlue(), true);
     }
 
-    private void createEventPanel(LyxPanel parent, String name) {
+    private void createEventPanel(LyxPanel parent, Event event) {
         LyxPanel eventPanel = new LyxPanel(parent);
 
         JButton editEventButton = new JButton("Edit");
 
-        eventPanel.add(new JLabel(name + ":"));
-        String event = null;
-        Script script = entity.events.get(Event.ON_INTERACT);
+        eventPanel.add(new JLabel(event.name() + ":"));
+        String eventScriptName = null;
+        Script script = entity.events.get(event);
         if (script != null) {
-            event = script.name;
+            eventScriptName = script.name;
         } else {
             editEventButton.setEnabled(false);
         }
-        JTextField eventTextField = new JTextField(event, 8);
+        JTextField eventTextField = new JTextField(eventScriptName, 8);
         eventPanel.add(eventTextField);
         eventTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -94,6 +91,8 @@ class EntityDialog extends JDialog {
             }
         });
 
+        String name = event.name();
+
         JButton setEventButton = new JButton("Set");
         eventPanel.add(setEventButton);
         setEventButton.addActionListener(e -> {
@@ -101,12 +100,12 @@ class EntityDialog extends JDialog {
             if (!scriptName.isEmpty()) {
                 File file = new File("script/" + scriptName + ".script");
                 if (LyxGameEditor.fileCheck(file, this)) {
-                    entity.events.put(Event.ON_INTERACT, Script.loadFromFile(scriptName));
+                    entity.events.put(event, Script.loadFromFile(scriptName));
                     JOptionPane.showMessageDialog(this,
                             String.format("Assigned script '%s' to %s.", scriptName, name));
                 }
             } else {
-                entity.events.put(Event.ON_INTERACT, null);
+                entity.events.put(event, null);
                 JOptionPane.showMessageDialog(this, String.format("Cleared %s.", name));
             }
         });
@@ -121,7 +120,7 @@ class EntityDialog extends JDialog {
                 String scriptName = eventFileChooser.getSelectedFile().getName();
                 scriptName = scriptName.substring(0, scriptName.lastIndexOf('.'));
                 eventTextField.setText(scriptName);
-                entity.events.put(Event.ON_INTERACT, Script.loadFromFile(scriptName));
+                entity.events.put(event, Script.loadFromFile(scriptName));
                 JOptionPane.showMessageDialog(this,
                         String.format("Assigned script '%s' to %s.", scriptName, name));
             }
@@ -131,7 +130,7 @@ class EntityDialog extends JDialog {
         eventPanel.add(clearEventButton);
         clearEventButton.addActionListener(e -> {
             eventTextField.setText(null);
-            entity.events.put(Event.ON_INTERACT, null);
+            entity.events.put(event, null);
             JOptionPane.showMessageDialog(this, String.format("Cleared %s.", name));
         });
 
@@ -239,6 +238,13 @@ class EntityDialog extends JDialog {
         JSpinner zSpinner = new JSpinner(zSpinnerModel);
         zSpinner.addChangeListener(e -> entity.position.z = (int) zSpinner.getValue());
         positionPanel.add(zSpinner);
+
+        LyxPanel directionPanel = new LyxPanel(propertyPanel);
+        directionPanel.add(new JLabel("direction:"));
+        JComboBox<Direction> directionComboBox = new JComboBox<>(Direction.values());
+        directionPanel.add(directionComboBox);
+        directionComboBox.setSelectedItem(entity.direction);
+        directionComboBox.addActionListener(e -> entity.direction = (Direction) directionComboBox.getSelectedItem());
 
         try {
             final ImageIcon imageIcon = new ImageIcon(ImageIO.read(new File("img/editor/angery.png")));

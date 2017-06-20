@@ -19,9 +19,9 @@ class InputProcessor implements KeyListener {
     private static final int DOWN = 40;
 
     private final HashMap<Integer, Boolean> keys;
-    private final HashMap<Integer, Integer> directions;
+    private final HashMap<Integer, Direction> directions;
     private final LyxGame lyxGame;
-    private final ArrayList<Integer> directionQueue;
+    private final ArrayList<Direction> directionQueue;
     private HashMap<Integer, Boolean> oldKeys;
     private Player player;
 
@@ -75,7 +75,7 @@ class InputProcessor implements KeyListener {
     }
 
     private void processDirections() {
-        for (Map.Entry<Integer, Integer> direction : directions.entrySet()) {
+        for (Map.Entry<Integer, Direction> direction : directions.entrySet()) {
             processDirection(direction);
         }
 
@@ -84,7 +84,7 @@ class InputProcessor implements KeyListener {
         }
     }
 
-    private void processDirection(Map.Entry<Integer, Integer> direction) {
+    private void processDirection(Map.Entry<Integer, Direction> direction) {
         if (keys.get(direction.getKey())) {
             if (!oldKeys.get(direction.getKey())) {
                 directionQueue.add(direction.getValue());

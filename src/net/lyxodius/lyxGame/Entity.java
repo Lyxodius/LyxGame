@@ -10,18 +10,18 @@ public class Entity {
     static final int HEIGHT = LyxGame.TILE_SIZE * 2;
     static final int RENDERED_WIDTH = WIDTH * LyxGame.MAGNIFICATION;
     public final HashMap<Event, Script> events;
-    private final ArrayList<Integer> moveQueue;
+    private final ArrayList<Direction> moveQueue;
     private final Random random;
     public Vector3D position;
     public String name;
     public BufferedImage image;
     public String imageName;
     public Behavior behavior;
+    public Direction direction;
     int targetX;
     int targetY;
     int speed;
     private int step;
-    private int direction;
     private boolean moving;
     private int xOffset;
     private int yOffset;
@@ -66,7 +66,7 @@ public class Entity {
 
         if (target != null && !target.moving) {
             if (target.events.get(Event.ON_INTERACT) != null) {
-                target.direction = Direction.getOpposite(direction);
+                target.direction = direction.getOpposite();
                 scriptExecutor.executeScript(target.events.get(Event.ON_INTERACT).getScript());
             }
         }
@@ -91,7 +91,7 @@ public class Entity {
         return step;
     }
 
-    int getDirection() {
+    Direction getDirection() {
         return direction;
     }
 
@@ -103,14 +103,14 @@ public class Entity {
         return yOffset;
     }
 
-    void queueMove(int direction) {
+    void queueMove(Direction direction) {
         if (moveQueue.contains(direction)) {
-            moveQueue.remove((Integer) direction);
+            moveQueue.remove(direction);
         }
         moveQueue.add(direction);
     }
 
-    boolean attemptMove(int direction, Map map) {
+    boolean attemptMove(Direction direction, Map map) {
         boolean result = false;
 
         targetX = position.x;
@@ -158,7 +158,7 @@ public class Entity {
     }
 
     private void randomMove(Map map) {
-        attemptMove(random.nextInt(4), map);
+        attemptMove(Direction.getByValue(random.nextInt(4)), map);
     }
 
     void update(Map map) {
@@ -196,8 +196,8 @@ public class Entity {
         }
     }
 
-    void stopMove(int direction) {
-        moveQueue.remove((Integer) direction);
+    void stopMove(Direction direction) {
+        moveQueue.remove(direction);
     }
 
     public String toString() {

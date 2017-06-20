@@ -1,21 +1,36 @@
 package net.lyxodius.lyxGame;
 
-class Direction {
-    static final int UP = 0;
-    static final int RIGHT = 1;
-    static final int DOWN = 2;
-    static final int LEFT = 3;
+public enum Direction {
+    UP(0),
+    RIGHT(1),
+    DOWN(2),
+    LEFT(3);
 
-    static int getOpposite(int direction) {
-        if (direction == UP) {
+    public final int value;
+
+    Direction(int value) {
+        this.value = value;
+    }
+
+    public static Direction getByValue(int value) {
+        for (Direction direction : values()) {
+            if (direction.value == value) {
+                return direction;
+            }
+        }
+        return null;
+    }
+
+    public Direction getOpposite() {
+        if (this == UP) {
             return DOWN;
-        } else if (direction == RIGHT) {
+        } else if (this == RIGHT) {
             return LEFT;
-        } else if (direction == DOWN) {
+        } else if (this == DOWN) {
             return UP;
-        } else if (direction == LEFT) {
+        } else if (this == LEFT) {
             return RIGHT;
         }
-        return -1;
+        return null;
     }
 }
