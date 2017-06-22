@@ -1,4 +1,4 @@
-package net.lyxodius.lyxGame;
+package net.lyxodius.lyxGame.main;
 
 public class Vector2D {
     public int x;

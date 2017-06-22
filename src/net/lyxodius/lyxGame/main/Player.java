@@ -1,4 +1,4 @@
-package net.lyxodius.lyxGame;
+package net.lyxodius.lyxGame.main;
 
 class Player extends Entity {
     private final Camera camera;

@@ -1,4 +1,4 @@
-package net.lyxodius.lyxGame;
+package net.lyxodius.lyxGame.main;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -82,17 +82,13 @@ public class Entity {
 
     public void setImage(String name) {
         if (name != null && !name.equals("null")) {
-            image = AssetManager.getImageByName(name);
+            image = AssetManager.getImageByPath("entity/" + name);
             imageName = name;
         }
     }
 
     int getStep() {
         return step;
-    }
-
-    Direction getDirection() {
-        return direction;
     }
 
     int getXOffset() {

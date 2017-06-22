@@ -1,4 +1,4 @@
-package net.lyxodius.lyxGame;
+package net.lyxodius.lyxGame.main;
 
 /**
  * Created by Lyxodius on 20.06.2017.

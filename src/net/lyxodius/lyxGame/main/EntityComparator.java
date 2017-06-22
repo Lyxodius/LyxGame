@@ -1,4 +1,4 @@
-package net.lyxodius.lyxGame;
+package net.lyxodius.lyxGame.main;
 
 import java.util.Comparator;
 

@@ -1,7 +1,7 @@
 package net.lyxodius.lyxGameEditor;
 
-import net.lyxodius.lyxGame.LyxGame;
-import net.lyxodius.lyxGame.Map;
+import net.lyxodius.lyxGame.main.LyxGame;
+import net.lyxodius.lyxGame.main.Map;
 
 import javax.swing.*;
 import java.awt.*;

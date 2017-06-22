@@ -1,8 +1,8 @@
 package net.lyxodius.lyxGameEditor;
 
-import net.lyxodius.lyxGame.Entity;
-import net.lyxodius.lyxGame.Vector2D;
-import net.lyxodius.lyxGame.Vector3D;
+import net.lyxodius.lyxGame.main.Entity;
+import net.lyxodius.lyxGame.main.Vector2D;
+import net.lyxodius.lyxGame.main.Vector3D;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

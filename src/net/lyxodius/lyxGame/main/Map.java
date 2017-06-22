@@ -1,4 +1,4 @@
-package net.lyxodius.lyxGame;
+package net.lyxodius.lyxGame.main;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ public class Map {
     public String name;
     public int[][][] tiles;
     public boolean[][] collisionTiles;
+    public String bgm;
     private int width;
     private int height;
 
@@ -43,6 +44,8 @@ public class Map {
                     int[][][] tiles = new int[3][height][width];
                     boolean[][] collisionTiles = new boolean[height][width];
 
+                    String bgm = bufferedReader.readLine();
+
                     bufferedReader.readLine();
 
                     for (int z = 0; z < 4; z++) {
@@ -69,6 +72,7 @@ public class Map {
                     map = new Map(file.getName(), width, height);
                     map.tiles = tiles;
                     map.collisionTiles = collisionTiles;
+                    map.bgm = bgm;
 
                     String line = bufferedReader.readLine();
                     while (line != null) {
@@ -149,6 +153,7 @@ public class Map {
             try (PrintWriter printWriter = new PrintWriter(fileWriter)) {
                 printWriter.println(Integer.toString(width));
                 printWriter.println(Integer.toString(height));
+                printWriter.println(bgm);
 
                 for (int z = 0; z < 4; z++) {
                     printWriter.println();

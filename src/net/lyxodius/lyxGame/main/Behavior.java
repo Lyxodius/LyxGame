@@ -1,11 +1,11 @@
-package net.lyxodius.lyxGame;
+package net.lyxodius.lyxGame.main;
 
 /**
  * Created by Lyxodius on 18.06.2017.
  */
 public enum Behavior {
     NOTHING(null),
-    RANDOM_MOVEMENT(new Timer(1000, 1000));
+    RANDOM_MOVEMENT(new Timer(1000, 3000));
 
     final Timer timer;
 

@@ -1,6 +1,6 @@
 package net.lyxodius.lyxGameEditor;
 
-import net.lyxodius.lyxGame.*;
+import net.lyxodius.lyxGame.main.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

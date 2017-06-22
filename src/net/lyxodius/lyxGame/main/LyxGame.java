@@ -1,4 +1,7 @@
-package net.lyxodius.lyxGame;
+package net.lyxodius.lyxGame.main;
+
+import net.lyxodius.lyxGame.systemGraphics.MessageBox;
+import net.lyxodius.lyxGame.systemGraphics.SystemGraphic;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -10,30 +13,37 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class LyxGame extends JFrame implements Runnable {
+    public static final int MAGNIFICATION = 5;
     static final int TILE_SIZE = 16;
-    static final int MAGNIFICATION = 5;
     static final int RENDERED_TILE_SIZE = TILE_SIZE * MAGNIFICATION;
 
     static final int FRAME_MS = 16;
     private static final boolean RENDER_FPS = false;
     static ScriptExecutor scriptExecutor;
-    private static int frame;
+    private static long frame;
     private final Player player;
     private final ArrayList<BufferedImage> tileSets;
     private final Camera camera;
     private final boolean running;
     private final InputProcessor inputProcessor;
+    private final ArrayList<SystemGraphic> systemGraphics;
+    private final MessageBox messageBox;
+    private final MidiPlayer audio;
+    boolean movementStopped;
     Map map;
     private int averageFps;
     private long lastLoopTime;
     private long lastFpsUpdate;
     private ArrayList<Integer> fpsCollection;
+    private boolean fullscreen;
 
     private LyxGame() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         camera = new Camera(this);
         tileSets = loadTileSets();
+
+        audio = new MidiPlayer();
 
         player = new Player(camera);
         teleportPlayer("0", 2, 2);
@@ -47,6 +57,9 @@ public class LyxGame extends JFrame implements Runnable {
         lastFpsUpdate = System.currentTimeMillis();
 
         fpsCollection = new ArrayList<>();
+        systemGraphics = new ArrayList<>();
+        messageBox = new MessageBox();
+        systemGraphics.add(messageBox);
 
         scriptExecutor = new ScriptExecutor(this);
         inputProcessor = new InputProcessor(this);
@@ -77,15 +90,32 @@ public class LyxGame extends JFrame implements Runnable {
         return tileSets;
     }
 
-    static int getFrame() {
+    public static long getFrame() {
         return frame;
     }
 
+    MessageBox getMessageBox() {
+        return messageBox;
+    }
+
     void teleportPlayer(String name, int x, int y) {
+        String bgm = null;
+        if (map != null) {
+            bgm = map.bgm;
+        }
+
         this.map = Map.readFromFile(name);
         map.getEntityList().add(player);
         player.position = new Vector3D(x, y, 1);
         camera.adjustToPosition(player.position);
+
+        if (!map.bgm.equals(bgm)) {
+            if (!map.bgm.isEmpty() && !map.bgm.equals("null")) {
+                audio.playMidi(map.bgm);
+            } else {
+                audio.stopMidi();
+            }
+        }
     }
 
     private void render(Graphics2D graphics2D) {
@@ -117,6 +147,10 @@ public class LyxGame extends JFrame implements Runnable {
                             (tileY + 1) * TILE_SIZE, null);
                 }
             }
+        }
+
+        for (SystemGraphic systemGraphic : systemGraphics) {
+            systemGraphic.draw(graphics2D);
         }
 
         if (RENDER_FPS) {
@@ -174,10 +208,9 @@ public class LyxGame extends JFrame implements Runnable {
 
         while (running) {
             inputProcessor.processInput();
-            for (Entity entity : map.getEntityList()) {
-                entity.update(map);
-            }
-            camera.update();
+
+            updateGame();
+
             Graphics g = myStrategy.getDrawGraphics();
             try {
                 render((Graphics2D) g);
@@ -194,6 +227,20 @@ public class LyxGame extends JFrame implements Runnable {
         }
     }
 
+    private void updateGame() {
+        if (!movementStopped) {
+            for (Entity entity : map.getEntityList()) {
+                entity.update(map);
+            }
+        }
+
+        camera.update();
+
+        for (SystemGraphic systemGraphic : systemGraphics) {
+            systemGraphic.update();
+        }
+    }
+
     Player getPlayer() {
         return player;
     }
@@ -204,5 +251,20 @@ public class LyxGame extends JFrame implements Runnable {
 
     ScriptExecutor getScriptExecutor() {
         return scriptExecutor;
+    }
+
+    void toggleFullscreen() {
+        GraphicsDevice myDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+
+        if (!fullscreen) {
+            DisplayMode newDisplayMode = new DisplayMode(1280, 720, myDevice.getDisplayMode().getBitDepth(), myDevice.getDisplayMode().getRefreshRate());
+
+            myDevice.setFullScreenWindow(this);
+            myDevice.setDisplayMode(newDisplayMode);
+        } else {
+            myDevice.setFullScreenWindow(null);
+        }
+
+        fullscreen = !fullscreen;
     }
 }

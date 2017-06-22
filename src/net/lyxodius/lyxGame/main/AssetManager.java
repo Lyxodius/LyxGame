@@ -1,4 +1,4 @@
-package net.lyxodius.lyxGame;
+package net.lyxodius.lyxGame.main;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -6,21 +6,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-class AssetManager {
+public class AssetManager {
     private static final HashMap<String, BufferedImage> IMAGES = new HashMap<>();
 
-    static BufferedImage getImageByName(String name) {
+    public static BufferedImage getImageByPath(String path) {
         BufferedImage image = null;
 
-        if (name != null) {
-            if (IMAGES.containsKey(name)) {
-                image = IMAGES.get(name);
+        if (path != null) {
+            if (IMAGES.containsKey(path)) {
+                image = IMAGES.get(path);
             } else {
-                File file = new File("img/entity/" + name + ".png");
+                File file = new File("img/" + path + ".png");
                 if (file.exists()) {
                     try {
                         image = ImageIO.read(file);
-                        IMAGES.put(name, image);
+                        IMAGES.put(path, image);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

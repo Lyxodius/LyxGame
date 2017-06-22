@@ -1,4 +1,4 @@
-package net.lyxodius.lyxGame;
+package net.lyxodius.lyxGame.main;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -17,6 +17,7 @@ class InputProcessor implements KeyListener {
     private static final int UP = 38;
     private static final int RIGHT = 39;
     private static final int DOWN = 40;
+    private static final int F1 = 112;
 
     private final HashMap<Integer, Boolean> keys;
     private final HashMap<Integer, Direction> directions;
@@ -36,6 +37,7 @@ class InputProcessor implements KeyListener {
         keys.put(UP, false);
         keys.put(RIGHT, false);
         keys.put(DOWN, false);
+        keys.put(F1, false);
 
         oldKeys = copy(keys);
 
@@ -65,8 +67,18 @@ class InputProcessor implements KeyListener {
             System.exit(0);
         }
 
-        if (keys.get(ENTER) || keys.get(SPACE)) {
-            player.interact(lyxGame.getMap(), lyxGame.getScriptExecutor());
+        if ((keys.get(ENTER) || keys.get(SPACE)) && (!oldKeys.get(ENTER) && !oldKeys.get(SPACE))) {
+            if (lyxGame.getMessageBox().isPaused()) {
+                if (!lyxGame.getMessageBox().continueMessage()) {
+                    lyxGame.movementStopped = false;
+                }
+            } else if (!lyxGame.movementStopped) {
+                player.interact(lyxGame.getMap(), lyxGame.getScriptExecutor());
+            }
+        }
+
+        if (keys.get(F1) && !oldKeys.get(F1)) {
+            lyxGame.toggleFullscreen();
         }
 
         processDirections();

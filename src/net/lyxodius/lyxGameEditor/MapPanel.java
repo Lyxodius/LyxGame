@@ -1,6 +1,6 @@
 package net.lyxodius.lyxGameEditor;
 
-import net.lyxodius.lyxGame.Map;
+import net.lyxodius.lyxGame.main.Map;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -56,5 +56,33 @@ class MapPanel extends LyxPanel {
                     String.format("Resized map '%s'.\nWidth: %d\nHeight: %d", map.name, width, height));
         });
         resizePanel.add(resizeButton);
+
+        LyxPanel bgmPanel = new LyxPanel(this);
+
+        bgmPanel.add(new JLabel("bgm:"));
+        JTextField bgmTextField = new JTextField(map.bgm);
+        bgmPanel.add(bgmTextField);
+        bgmTextField.setEnabled(false);
+
+        JButton bgmBrowseButton = new JButton("Browse");
+        bgmPanel.add(bgmBrowseButton);
+        bgmBrowseButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser("bgm");
+            int result = fileChooser.showDialog(this, "Assign BGM");
+
+            if (result == 0) {
+                String name = fileChooser.getSelectedFile().getName();
+                name = name.substring(0, name.lastIndexOf("."));
+                map.bgm = name;
+                bgmTextField.setText(name);
+            }
+        });
+
+        JButton bgmClearButton = new JButton("Clear");
+        bgmPanel.add(bgmClearButton);
+        bgmClearButton.addActionListener(e -> {
+            map.bgm = null;
+            bgmTextField.setText("null");
+        });
     }
 }
